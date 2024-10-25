@@ -10,11 +10,30 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: npm ci && run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MUSICMAKER_2B85B }}
-          channelId: live
-          projectId: musicmaker-2b85b
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install
+        working-directory: musicmaker/front
+
+      - name: Build Project
+        run: npm run build
+        working-directory: musicmaker/front
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: List Build Directory (for debugging)
+        run: ls -la
+        working-directory: musicmaker/front/build
+
+      - name: Deploy to Firebase Hosting
+        run: firebase deploy --only hosting --token ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MUSICMAKER_2B85B}}
+        working-directory: musicmaker/front
+
