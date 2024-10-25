@@ -1,7 +1,6 @@
-// Sounds.js
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 
-const Sounds = ({ selectedSounds, overallVolume, soundVolumes, effects }) => {
+const Sounds = ({ selectedSounds, playAll, stopAll, soundVolumes, effects, overallVolume }) => {
   const audioRefs = useRef({
     "Rain": "/Music/Calm/Rain.mp3",
     "Ocean Waves": "/Music/Calm/OceanWaves.mp3",
@@ -11,94 +10,112 @@ const Sounds = ({ selectedSounds, overallVolume, soundVolumes, effects }) => {
     "Chill Bass": "/Music/Calm/ChillBass.mp3",
   });
 
-  const audioContexts = useRef({});
-  const gainNodes = useRef({});
-  const reverbNodes = useRef({});
-  const bassBoostNodes = useRef({});
+  const audioContext = useRef(null);
+  const audioElements = useRef({});
+  const masterGain = useRef(null);
 
-  useEffect(() => {
+  const initializeAudioContext = useCallback(() => {
+    if (!audioContext.current) {
+      audioContext.current = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain.current = audioContext.current.createGain();
+      masterGain.current.gain.value = overallVolume / 100;
+      masterGain.current.connect(audioContext.current.destination);
+    }
+
+    if (audioContext.current.state === "suspended") {
+      audioContext.current.resume();
+    }
+  }, [overallVolume]);
+
+  const setupAudioNodes = useCallback(() => {
     selectedSounds.forEach((sound) => {
-      if (!audioContexts.current[sound]) {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      if (!audioElements.current[sound]) {
         const audio = new Audio(audioRefs.current[sound]);
-        const source = audioContext.createMediaElementSource(audio);
-        const gainNode = audioContext.createGain();
-        const reverbNode = audioContext.createGain(); // Placeholder for reverb effect
-        const bassBoostNode = audioContext.createBiquadFilter();
-        bassBoostNode.type = "lowshelf";
-        bassBoostNode.frequency.value = 200; // Frequency for bass boost
-        bassBoostNode.gain.value = 0; // Default to no bass boost
-
-        source.connect(gainNode);
-        gainNode.connect(bassBoostNode);
-        bassBoostNode.connect(reverbNode); // Connect reverb node here
-        reverbNode.connect(audioContext.destination);
-
-        audio.loop = true; // Loop the audio
-        audioContexts.current[sound] = { audio, audioContext, gainNode, reverbNode, bassBoostNode };
-        gainNodes.current[sound] = gainNode;
-        reverbNodes.current[sound] = reverbNode;
-        bassBoostNodes.current[sound] = bassBoostNode;
+        audio.loop = true; // Ensure the audio loops automatically
+        const track = audioContext.current.createMediaElementSource(audio);
+        const gainNode = audioContext.current.createGain();
+        const bassBoost = audioContext.current.createBiquadFilter();
+        bassBoost.type = "lowshelf";
+        bassBoost.frequency.value = 200;
+        bassBoost.gain.value = effects.bassBoost;
+  
+        const reverbGain = audioContext.current.createGain();
+        reverbGain.gain.value = effects.reverb / 100;
+  
+        track.connect(gainNode);
+        gainNode.connect(bassBoost);
+        bassBoost.connect(reverbGain);
+        reverbGain.connect(masterGain.current);
+  
+        audioElements.current[sound] = { audio, gainNode, bassBoost, reverbGain };
       }
     });
 
-    return () => {
-      Object.values(audioContexts.current).forEach(({ audio }) => {
+    // Remove any audio that is not in selectedSounds
+    Object.keys(audioElements.current).forEach((sound) => {
+      if (!selectedSounds.includes(sound)) {
+        const { audio } = audioElements.current[sound];
+        audio.pause();
+        audio.currentTime = 0;
+        delete audioElements.current[sound];
+      }
+    });
+  }, [effects, selectedSounds]);
+
+  useEffect(() => {
+    if (playAll) {
+      initializeAudioContext();
+      setupAudioNodes();
+      Object.values(audioElements.current).forEach(({ audio }) => {
+        if (audio.paused) {
+          audio.play().catch(() => {});
+        }
+      });
+    }
+
+    if (stopAll) {
+      Object.values(audioElements.current).forEach(({ audio }) => {
         audio.pause();
         audio.currentTime = 0;
       });
-    };
-  }, [selectedSounds]);
+    }
+  }, [playAll, stopAll, initializeAudioContext, setupAudioNodes]);
 
   useEffect(() => {
-    // Apply overall volume control
-    Object.values(gainNodes.current).forEach((gainNode) => {
-      gainNode.gain.value = overallVolume / 100;
+    Object.values(audioElements.current).forEach(({ bassBoost, reverbGain }) => {
+      bassBoost.gain.setValueAtTime(effects.bassBoost, audioContext.current.currentTime);
+      reverbGain.gain.setValueAtTime(effects.reverb / 100, audioContext.current.currentTime);
     });
-  }, [overallVolume]);
+  }, [effects]);
 
   useEffect(() => {
-    // Adjust individual sound volumes
     Object.entries(soundVolumes).forEach(([sound, volume]) => {
-      if (gainNodes.current[sound]) {
-        gainNodes.current[sound].gain.value = volume / 100;
+      if (audioElements.current[sound]) {
+        audioElements.current[sound].gainNode.gain.setValueAtTime(volume / 100, audioContext.current.currentTime);
       }
     });
   }, [soundVolumes]);
 
   useEffect(() => {
-    // Adjust reverb effect based on effects.reverb
-    Object.values(reverbNodes.current).forEach((reverbNode) => {
-      reverbNode.gain.value = effects.reverb / 100;
-    });
-
-    // Adjust bass boost based on effects.bassBoost
-    Object.values(bassBoostNodes.current).forEach((bassBoostNode) => {
-      bassBoostNode.gain.value = effects.bassBoost;
-    });
-  }, [effects]);
-
-  const playSound = (sound) => {
-    if (audioContexts.current[sound]) {
-      audioContexts.current[sound].audio.play();
+    if (masterGain.current) {
+      masterGain.current.gain.setValueAtTime(overallVolume / 100, audioContext.current.currentTime);
     }
-  };
-
-  const stopSound = (sound) => {
-    if (audioContexts.current[sound]) {
-      audioContexts.current[sound].audio.pause();
-      audioContexts.current[sound].audio.currentTime = 0;
-    }
-  };
-
-  useEffect(() => {
-    selectedSounds.forEach((sound) => playSound(sound));
-  }, [selectedSounds]);
+  }, [overallVolume]);
 
   return null;
 };
 
 export default Sounds;
+
+
+
+
+
+
+
+
+
+
 
 
 
