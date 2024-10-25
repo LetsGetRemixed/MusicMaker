@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/home/homepage';
 import MoodSelection from './components/home/MoodSelection';
 
-import MixerControls from './components/home/MixerControls';
+import MixerControls from './components/home/MixerControls/MixerControls';
 
 function App() {
   return (
