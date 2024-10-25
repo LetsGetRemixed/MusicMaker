@@ -23,20 +23,20 @@ jobs:
       
       - name: Install Dependencies
         run: npm install
-        working-directory: musicmaker/front
+        working-directory: front
       
       - name: Build Project
         run: npm run build
-        working-directory: musicmaker/front
+        working-directory: front
       
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
       
       - name: List Build Directory (for debugging)
         run: ls -la
-        working-directory: musicmaker/front/build
+        working-directory: front/build
       
       - name: Deploy to Firebase Hosting for Preview
         run: firebase deploy --only hosting --token ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MUSICMAKER_2B85B }}
-        working-directory: musicmaker/front
+        working-directory: front
 
