@@ -1,0 +1,106 @@
+/* Default gradient background */
+.bg-default-gradient {
+    background: linear-gradient(-45deg, #a0d8ef, #ccebc5, #decbe4, #fddaec);
+    background-size: 400% 400%;
+    animation: gradientMove 15s ease infinite;
+  }
+  
+  /* Mood gradients */
+  .bg-calm-gradient {
+    background: linear-gradient(-45deg, #A0D8EF, #CDEFFD, #E6F7FB, #A0D8EF);
+    background-size: 400% 400%;
+    animation: gradientMove 20s ease infinite;
+  }
+  
+  .bg-energetic-gradient {
+    background: linear-gradient(-45deg, #FFD700, #FFA500, #FF6347, #FFD700);
+    background-size: 400% 400%;
+    animation: gradientMove 20s ease infinite;
+  }
+  
+  .bg-focus-gradient {
+    background: linear-gradient(-45deg, #98FB98, #A4D3EE, #98FB98, #7EC0EE);
+    background-size: 400% 400%;
+    animation: gradientMove 20s ease infinite;
+  }
+  
+  .bg-happy-gradient {
+    background: linear-gradient(-45deg, #FFB6C1, #FFC0CB, #FFDAB9, #FFB6C1);
+    background-size: 400% 400%;
+    animation: gradientMove 20s ease infinite;
+  }
+  
+  .bg-sad-gradient {
+    background: linear-gradient(-45deg, #A9A9A9, #B0C4DE, #778899, #A9A9A9);
+    background-size: 400% 400%;
+    animation: gradientMove 20s ease infinite;
+  }
+  
+  /* Keyframes for smooth gradient movement */
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  /* Mood buttons styling */
+  .mood-button {
+    padding: 0.75rem 2.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(145deg, #6b8e23, #3cb371);
+    border: none;
+    border-radius: 9999px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .mood-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(145deg, #7ccd23, #4fba88);
+  }
+  
+  .mood-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(108, 207, 246, 0.3);
+  }
+  
+  /* Active state for selected mood */
+  .mood-button.active {
+    background: linear-gradient(145deg, #3cb371, #6b8e23);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Choose Your Sounds button styling */
+  .custom-action-button {
+    padding: 0.75rem 2.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(145deg, #1E90FF, #00BFFF);
+    border: none;
+    border-radius: 9999px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .custom-action-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(145deg, #00BFFF, #1E90FF);
+  }
+  
+  /* Add text shadow for better readability */
+  .text-with-shadow {
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.7);
+  }
+  
+  /* Background overlay for better contrast */
+  .bg-overlay {
+    background-color: rgba(255, 255, 255, 0.0); /* Semi-transparent dark background */
+    border-radius: 0.5rem;
+  }
+  
+  
