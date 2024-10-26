@@ -93,14 +93,14 @@ const MixerControls = () => {
 
   return (
     <div>
-      <Navigation/>
+      
     <section
       className="min-h-screen p-8 sm:p-6 bg-cover bg-center text-white font-rale overflow-x-hidden"
       style={{
         backgroundImage: `url(${moodBackgrounds[mood] || "/Images/default.jpg"})`,
       }}
     >
-
+        <Navigation/>
       <h2 className="text-4xl font-extrabold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 drop-shadow-lg">
   🎶 Mixer Controls - {mood} Mood 🎶
 </h2>
@@ -123,6 +123,7 @@ const MixerControls = () => {
         sounds={sounds}
         selectedSounds={selectedSounds}
         onAddOrRemoveSound={addOrRemoveSound}
+        selectedCategory={selectedCategory}
       />
 
       <EffectControls
