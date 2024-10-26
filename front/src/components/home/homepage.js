@@ -9,7 +9,6 @@ const Home = () => {
       <div>
         <HeroSection />
         
-        <PlayArea />
       </div>
     </div>
   );
