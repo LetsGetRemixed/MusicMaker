@@ -7,10 +7,18 @@ import SoundButtons from "./SoundButton";
 import VolumeControls from "./VolumeControls";
 import EffectControls from "./EffectControls";
 import PlayStopControls from "./PlayStopControls";
+import Navigation from "./Navigation";
 
 const MixerControls = () => {
   const location = useLocation();
   const { mood } = location.state || {};
+
+  const moodBackgrounds = {
+    Calm: "/Images/Calm/calm.jpg",
+    Energetic: "/Images/Energetic/energetic.jpg",
+    Focus: "/Images/Focus/focus.jpg",
+    // Add more moods and paths as needed
+  };
 
   const moodSoundOptions = {
     Calm: {
@@ -84,8 +92,18 @@ const MixerControls = () => {
   const sounds = moodSoundOptions[mood][selectedCategory];
 
   return (
-    <section className="min-h-screen p-8 bg-gray-900 text-white">
-      <h2 className="text-4xl font-bold mb-4">Mixer Controls - {mood} Mood</h2>
+    <div>
+      <Navigation/>
+    <section
+      className="min-h-screen p-8 sm:p-6 bg-cover bg-center text-white font-rale overflow-x-hidden"
+      style={{
+        backgroundImage: `url(${moodBackgrounds[mood] || "/Images/default.jpg"})`,
+      }}
+    >
+
+      <h2 className="text-4xl font-extrabold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 drop-shadow-lg">
+  🎶 Mixer Controls - {mood} Mood 🎶
+</h2>
 
       <VolumeControls
         overallVolume={mixer.overallVolume}
@@ -126,6 +144,7 @@ const MixerControls = () => {
         overallVolume={mixer.overallVolume}
       />
     </section>
+    </div>
   );
 };
 
