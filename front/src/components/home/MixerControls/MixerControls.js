@@ -17,6 +17,7 @@ const MixerControls = () => {
     Calm: "/Images/Calm/calm.jpg",
     Energetic: "/Images/Energetic/energetic.jpg",
     Focus: "/Images/Focus/focus.jpg",
+    Sad: "/Images/Sad/Sad.jpg",
     // Add more moods and paths as needed
   };
 
@@ -35,8 +36,19 @@ const MixerControls = () => {
       Ambient: ["White Noise", "Soft Piano", "Ambient Hum"],
       Beats: ["Soft Beats", "Bongo Taps", "Soft Bass"],
       Nature: ["Birds Chirping", "Rustling Leaves", "Water Drip"],
+    },
+    Happy: {
+      Ambient: ["Cheerful Melody", "Warm Synth", "Happy Chimes"],
+      Beats: ["Bouncy Drum", "Light Guitar Strum", "Ukulele Rhythm"],
+      Nature: ["Babbling Brook", "Sunny Meadow Birds", "Gentle Breeze"],
+    },
+    Sad: {
+      Ambient: ["Soft Vocals", "Gloomy Synth", "Distant Thunder"],
+      Beats: ["Soft Piano", "Mellow Strings", "Acoustic Guitar"],
+      Nature: ["Light Rain", "Wind Howling", "Rustling Leaves"],
     }
   };
+  
 
   const [selectedCategory, setSelectedCategory] = useState("Ambient");
   const [selectedSounds, setSelectedSounds] = useState([]);
@@ -86,6 +98,7 @@ const MixerControls = () => {
     console.log("Stop All button clicked"); // Log when stop is triggered
     setPlayAll(false);
     setStopAll(true);
+    
   };
 
   const categories = ["Ambient", "Beats", "Nature"];
@@ -100,10 +113,13 @@ const MixerControls = () => {
         backgroundImage: `url(${moodBackgrounds[mood] || "/Images/default.jpg"})`,
       }}
     >
-        <Navigation/>
+        <Navigation
+          onStopAll={handleStopAll}
+        
+        />
       <h2 className="text-4xl font-extrabold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 drop-shadow-lg">
-  🎶 Mixer Controls - {mood} Mood 🎶
-</h2>
+          🎶 Mixer Controls - {mood} Mood 🎶
+        </h2>
 
       <VolumeControls
         overallVolume={mixer.overallVolume}

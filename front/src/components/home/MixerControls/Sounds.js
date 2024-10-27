@@ -2,12 +2,21 @@ import { useRef, useEffect, useCallback } from "react";
 
 const Sounds = ({ selectedSounds, playAll, stopAll, soundVolumes, effects, overallVolume }) => {
   const audioRefs = useRef({
+    //CALM SOUNDS
     "Rain": "/Music/Calm/Rain.mp3",
     "Ocean Waves": "/Music/Calm/OceanWaves.mp3",
     "Wind Chimes": "/Music/Calm/WindChimes.mp3",
     "Soft Drum": "/Music/Calm/SoftDrum.mp3",
     "Smooth Synth": "/Music/Calm/SmoothSynth.mp3",
     "Chill Bass": "/Music/Calm/ChillBass.mp3",
+
+    //SAD SOUNDS
+    "Soft Piano": "/Music/Sad/SoftPiano.mp3",
+    "Mellow Strings": "/Music/Sad/MellowStrings.mp3",
+    "Gloomy Synth": "/Music/Sad/GloomySynth.mp3",
+    "Distant Thunder": "/Music/Sad/DistantThunder.mp3",
+    "Acoustic Guitar": "/Music/Sad/AcousticGuitar.mp3",
+    "Soft Vocals": "/Music/Sad/SoftVocals.mp3",
   });
 
   const audioContext = useRef(null);
@@ -76,6 +85,7 @@ const Sounds = ({ selectedSounds, playAll, stopAll, soundVolumes, effects, overa
     if (stopAll) {
       Object.values(audioElements.current).forEach(({ audio }) => {
         audio.pause();
+        console.log("Stopping all sounds");
         audio.currentTime = 0;
       });
     }
